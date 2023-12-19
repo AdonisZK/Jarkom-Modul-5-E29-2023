@@ -532,6 +532,7 @@ iptables -t nat -A POSTROUTING -p tcp --dport 80 -j SNAT --to-source 10.51.8.2
 ```
 - `-m statistic --mode nth --every 2 --packet 0`: Menggunakan DNAT setiap dua paket, aturan akan diterapkan pada setiap paket ke-2 yang masuk.
 - `-j DNAT --to-destination 10.51.14.138:80`: Menetapkan paket-paket tersebut ke alamat IP tujuan 10.51.14.138 pada port 80.
+- `-j SNAT --to-source 10.51.8.2`: Melakukan Source NAT pada paket-paket tersebut mengganti alamat sumber dengan 10.51.8.2.
 ##### Stark
 ```
 apt-get install nginx -y
