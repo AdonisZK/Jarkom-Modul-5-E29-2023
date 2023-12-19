@@ -1,8 +1,10 @@
 # Jarkom-Modul-5-E29-2023
 
 ### (A) Tugas pertama, buatlah peta wilayah sesuai berikut ini:
+#### Topologi GNS3
+![image](https://github.com/AdonisZK/Jarkom-Modul-5-E29-2023/assets/48209612/b1f20194-f178-4bc9-9b12-ae74d7edcf21)
 ### (B) Untuk menghitung rute-rute yang diperlukan, gunakan perhitungan dengan metode VLSM. Buat juga pohonnya, dan lingkari subnet yang dilewati.
-#### Topologi
+#### Topologi VLSM
 ![image](https://github.com/AdonisZK/Jarkom-Modul-5-E29-2023/assets/48209612/40e01283-4248-4ec9-b5c0-f96177d8bd61)
 #### VLSM Tree
 ![image](https://github.com/AdonisZK/Jarkom-Modul-5-E29-2023/assets/48209612/da32c2f4-f53d-46d4-bae5-ff369e3a2ba5)
@@ -36,6 +38,166 @@
 | A10    | 10.51.14.148 | 255.255.255.252   | 10.51.14.151   |
 
 #### Subnetting
+##### Aura
+```
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet dhcp
+
+#A10
+auto eth1
+iface eth1 inet static
+address 10.51.14.149
+netmask 255.255.255.252
+
+#A9
+auto eth2
+iface eth2 inet static
+address 10.51.14.145
+netmask 255.255.255.252
+```
+##### Heiter
+```
+auto lo
+iface lo inet loopback
+
+#A10
+auto eth0
+iface eth0 inet static
+address 10.51.14.150
+netmask 255.255.255.252
+gateway 10.51.14.149
+
+#A1
+auto eth1
+iface eth1 inet static
+address 10.51.0.1
+netmask 255.255.248.0
+
+#A2
+auto eth2
+iface eth2 inet static
+address 10.51.8.1
+netmask 255.255.252.0
+```
+##### Frieren
+```
+auto lo
+iface lo inet loopback
+
+#A9
+auto eth0
+iface eth0 inet static
+address 10.51.14.146
+netmask 255.255.255.252
+gateway 10.51.14.145
+
+#A7
+auto eth1
+iface eth1 inet static
+address 10.51.14.137
+netmask 255.255.255.252
+
+#A8
+auto eth2
+iface eth2 inet static
+address 10.51.14.141
+netmask 255.255.255.252
+```
+##### Himmel
+```
+auto lo
+iface lo inet loopback
+
+#A8
+auto eth0
+iface eth0 inet static
+address 10.51.14.142
+netmask 255.255.255.252
+gateway 10.51.14.141
+
+#A3
+auto eth1
+iface eth1 inet static
+address 10.51.12.1
+netmask 255.255.254.0
+
+#A4
+auto eth2
+iface eth2 inet static
+address 10.51.14.1
+netmask 255.255.255.128
+```
+##### Fern
+```
+auto lo
+iface lo inet loopback
+
+#A4
+auto eth0
+iface eth0 inet static
+address 10.51.14.2
+netmask 255.255.255.128
+gateway 10.51.14.1
+
+#A6
+auto eth1
+iface eth1 inet static
+address 10.51.14.133
+netmask 255.255.255.252
+
+#A5
+auto eth2
+iface eth2 inet static
+address 10.51.14.129
+netmask 255.255.255.252
+```
+##### Sein
+```
+#A2
+auto eth0
+iface eth0 inet static
+address 10.51.8.2
+netmask 255.255.252.0
+gateway 10.51.8.1
+```
+##### Stark
+```
+#A7
+auto eth0
+iface eth0 inet static
+address 10.51.14.138
+netmask 255.255.255.252
+gateway 10.51.14.137
+```
+##### Richter
+```
+#A6
+auto eth0
+iface eth0 inet static
+address 10.51.14.134
+netmask 255.255.255.252
+gateway 10.51.14.133
+```
+##### Revolte
+```
+#A5
+auto eth0
+iface eth0 inet static
+address 10.51.14.130
+netmask 255.255.255.252
+gateway 10.51.14.129
+```
+##### GrobeForest, TurkRegion, LaubHills, SchwerMountain - Client
+```
+auto eth0
+iface eth0 inet dhcp
+```
+
+#### Routing
+TBD
 ### (D) Tugas berikutnya adalah memberikan ip pada subnet SchwerMountain, LaubHills, TurkRegion, dan GrobeForest menggunakan bantuan DHCP.
 #### Script
 ##### Revolte - DHCP Server
