@@ -197,7 +197,55 @@ iface eth0 inet dhcp
 ```
 
 #### Routing
-TBD
+##### Aura
+```
+# Frieren
+## A8
+route add -net 10.51.14.140 netmask 255.255.255.252 gw 10.51.14.146
+## A3
+route add -net 10.51.12.0 netmask 255.255.254.0 gw 10.51.14.146
+## A4
+route add -net 10.51.14.0 netmask 255.255.255.128 gw 10.51.14.146
+## A5
+route add -net 10.51.14.128 netmask 255.255.255.252 gw 10.51.14.146
+## A6
+route add -net 10.51.14.132 netmask 255.255.255.252 gw 10.51.14.146
+## A7
+route add -net 10.51.14.136 netmask 255.255.255.252 gw 10.51.14.146
+# Heiter
+## A1
+route add -net 10.51.0.0 netmask 255.255.248.0 gw 10.51.14.150
+## A2
+route add -net 10.51.8.0 netmask 255.255.252.0 gw 10.51.14.150
+```
+##### Heiter
+```
+route add -net 0.0.0.0 netmask 0.0.0.0 gw 10.51.14.149
+```
+##### Frieren
+```
+# Himmel
+## A3
+route add -net 10.51.12.0 netmask 255.255.254.0 gw 10.51.14.142
+## A4
+route add -net 10.51.14.0 netmask 255.255.255.128 gw 10.51.14.142
+## A5
+route add -net 10.51.14.128 netmask 255.255.255.252 gw 10.51.14.142
+## A6
+route add -net 10.51.14.132 netmask 255.255.255.252 gw 10.51.14.142
+```
+##### Himmel
+```
+#Fern
+## A5
+route add -net 10.51.14.128 netmask 255.255.255.252 gw 10.51.14.2
+## A6
+route add -net 10.51.14.132 netmask 255.255.255.252 gw 10.51.14.2
+```
+##### Fern
+```
+route add -net 0.0.0.0 netmask 0.0.0.0 gw 10.51.14.142
+```
 ### (D) Tugas berikutnya adalah memberikan ip pada subnet SchwerMountain, LaubHills, TurkRegion, dan GrobeForest menggunakan bantuan DHCP.
 #### Script
 ##### Revolte - DHCP Server
