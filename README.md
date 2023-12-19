@@ -499,7 +499,78 @@ ping 10.51.8.2 -c 5            #Sein
 - Test ketiga `failed` karena break
 ### 7. Karena terdapat 2 WebServer, kalian diminta agar setiap client yang mengakses Sein dengan Port 80 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan dan request dari client yang mengakses Stark dengan port 443 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan.
 #### Script
+##### Sein
+```
+apt-get install nginx -y
+
+echo '
+    <h1>Sein nih boss</h1>
+' >/var/www/html/index.nginx-debian.html
+
+echo 'server {
+        listen 80 default_server;
+        listen 443 default_server;
+        listen [::]:80 default_server;
+
+        root /var/www/html;
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name _;
+
+        location / {
+            try_files $uri $uri/ =404;
+        }
+}' >/etc/nginx/sites-available/default
+
+service nginx restart
+
+iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+
+iptables -t nat -A PREROUTING -p tcp --dport 80 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 10.51.14.138:80
+iptables -t nat -A POSTROUTING -p tcp --dport 80 -j SNAT --to-source 10.51.8.2
+```
+- `-m statistic --mode nth --every 2 --packet 0`: Menggunakan DNAT setiap dua paket, aturan akan diterapkan pada setiap paket ke-2 yang masuk.
+- `-j DNAT --to-destination 10.51.14.138:80`: Menetapkan paket-paket tersebut ke alamat IP tujuan 10.51.14.138 pada port 80.
+##### Stark
+```
+apt-get install nginx -y
+
+echo '
+    <h1>Stark nih boss</h1>
+' >/var/www/html/index.nginx-debian.html
+
+echo 'server {
+        listen 80 default_server;
+        listen 443 default_server;
+        listen [::]:80 default_server;
+
+        root /var/www/html;
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name _;
+
+        location / {
+            try_files $uri $uri/ =404;
+        }
+}' >/etc/nginx/sites-available/default
+
+service nginx restart
+
+iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+
+iptables -t nat -A PREROUTING -p tcp --dport 443 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 10.51.8.2:443
+iptables -t nat -A POSTROUTING -p tcp --dport 443 -j SNAT --to-source 10.51.14.138
+```
+##### GrobeForest
+```
+curl 10.51.14.138:443
+curl 10.51.8.2:80
+```
 #### Testing
+![image](https://github.com/AdonisZK/Jarkom-Modul-5-E29-2023/assets/48209612/fc8acf8f-1701-46f1-9fa9-0d57eb32a70b)
+
 ### 8. Karena berbeda koalisi politik, maka subnet dengan masyarakat yang berada pada Revolte dilarang keras mengakses WebServer hingga masa pencoblosan pemilu kepala suku 2024 berakhir. Masa pemilu (hingga pemungutan dan penghitungan suara selesai) kepala suku bersamaan dengan masa pemilu Presiden dan Wakil Presiden Indonesia 2024.
 #### Script
 ##### Stark, Sein - Web Server
