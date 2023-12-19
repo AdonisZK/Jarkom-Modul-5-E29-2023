@@ -404,10 +404,27 @@ Pada saat node ke4 melakukan ping, tidak akan mendapat balasan dari Revolte
 
 ### 4. Lakukan pembatasan sehingga koneksi SSH pada Web Server hanya dapat dilakukan oleh masyarakat yang berada pada GrobeForest.
 #### Script
+Script langsung untuk soal 4-6, 8
 ##### Sein, Stark - Web Server
 ```
+# Soal 8
+iptables -A INPUT -s 10.51.14.130 -m time --datestart 2024-02-14T00:00:00 --datestop 2024-06-26T23:59:59 -j DROP
+
+# Soal 4
 iptables -A INPUT -p tcp --dport 22 -s 10.51.8.0/22 -j ACCEPT
 iptables -A INPUT -p tcp --dport 22 -j DROP
+
+# Soal 6
+iptables -A INPUT -m time --timestart 08:00 --timestop 12:00 --weekdays Mon,Tue,Wed,Thu -j ACCEPT
+iptables -A INPUT -m time --timestart 08:00 --timestop 11:00 --weekdays Fri -j ACCEPT
+iptables -A INPUT -m time --timestart 13:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+
+iptables -A INPUT -m time --timestart 12:00 --timestop 13:00 --weekdays Mon,Tue,Wed,Thu -j DROP
+iptables -A INPUT -m time --timestart 11:00 --timestop 13:00 --weekdays Fri -j DROP
+
+# Soal 5
+iptables -A INPUT -m time --timestart 08:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A INPUT -j DROP
 ```
 Hanya allow `-s` dari subnet GrobeForest
 ##### Others
@@ -437,7 +454,7 @@ iptables -A INPUT -j DROP
 - `--timestart 08:00`: Menetapkan waktu awal 08:00
 - `--timestop 16:00`: Menetapkan waktu akhir 16:00
 - `--weekdays Mon,Tue,Wed,Thu,Fri`: Menetapkan hari dimana aturan ini berlaku, yaitu Senin hingga Jumat
-##### Grobe
+##### GrobeForest
 ```
 date -s "6 DEC 2023 09:00:00" # Success
 ping 10.51.14.138 -c 5        #Stark
@@ -453,17 +470,66 @@ ping 10.51.8.2 -c 5           #Sein
 - Percobaan kedua `failed` karena diluar waktu jam kerja
 ### 6. Lalu, karena ternyata terdapat beberapa waktu di mana network administrator dari WebServer tidak bisa stand by, sehingga perlu ditambahkan rule bahwa akses pada hari Senin - Kamis pada jam 12.00 - 13.00 dilarang (istirahat maksi cuy) dan akses di hari Jumat pada jam 11.00 - 13.00 juga dilarang (maklum, Jumatan rek).
 #### Script
+##### Stark, Sein - Web Server
+```
+iptables -A INPUT -m time --timestart 08:00 --timestop 12:00 --weekdays Mon,Tue,Wed,Thu -j ACCEPT
+iptables -A INPUT -m time --timestart 08:00 --timestop 11:00 --weekdays Fri -j ACCEPT
+iptables -A INPUT -m time --timestart 13:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+
+iptables -A INPUT -m time --timestart 12:00 --timestop 13:00 --weekdays Mon,Tue,Wed,Thu -j DROP
+iptables -A INPUT -m time --timestart 11:00 --timestop 13:00 --weekdays Fri -j DROP
+```
+##### GrobeForest
+```
+date -s "14 DEC 2023 11:20:00" # Success
+ping 10.51.14.138 -c 5         #Stark
+ping 10.51.8.2 -c 5            #Sein
+date -s "15 DEC 2023 11:20:00" # Fail (Jumat)
+ping 10.51.14.138 -c 5         #Stark
+ping 10.51.8.2 -c 5            #Sein
+date -s "14 DEC 2023 12:20:00" # Fail (Break)
+ping 10.51.14.138 -c 5         #Stark
+ping 10.51.8.2 -c 5            #Sein
+```
 #### Testing
+##### GrobeForest
+![image](https://github.com/AdonisZK/Jarkom-Modul-5-E29-2023/assets/48209612/a3f60be5-5928-4882-a356-ee7997b277ed)
+- Test pertama `success` karena pada jam kerja
+- Test kedua `failed` karena jumatan
+- Test ketiga `failed` karena break
 ### 7. Karena terdapat 2 WebServer, kalian diminta agar setiap client yang mengakses Sein dengan Port 80 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan dan request dari client yang mengakses Stark dengan port 443 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan.
 #### Script
 #### Testing
 ### 8. Karena berbeda koalisi politik, maka subnet dengan masyarakat yang berada pada Revolte dilarang keras mengakses WebServer hingga masa pencoblosan pemilu kepala suku 2024 berakhir. Masa pemilu (hingga pemungutan dan penghitungan suara selesai) kepala suku bersamaan dengan masa pemilu Presiden dan Wakil Presiden Indonesia 2024.
 #### Script
+##### Stark, Sein - Web Server
+```
+iptables -A INPUT -s 10.51.14.130 -m time --datestart 2024-02-14T00:00:00 --datestop 2024-06-26T23:59:59 -j DROP
+```
+- `-s 10.51.14.130`: IP Revolte
+- `--datestart 2024-02-14T00:00:00`: Menetapkan tanggal dan waktu awal 14 Februari 2024 pukul 00:00:00
+- `--datestop 2024-06-26T23:59:59`: Menetapkan tanggal dan waktu akhir 26 Juni 2024 pukul 23:59:59
+- Waktu 14 Feb - 26 Jun diambil dari screenshot mba elshe
 #### Testing
+![image](https://github.com/AdonisZK/Jarkom-Modul-5-E29-2023/assets/48209612/91498d8a-f5d8-42d8-bb15-7b9302661edb)
+- Percobaan pertama `success` karena diluar waktu yang dilarang
+- Percobaan kedua `failed` karena dalam jangka waktu yang dilarang
 ### 9. Sadar akan adanya potensial saling serang antar kubu politik, maka WebServer harus dapat secara otomatis memblokir  alamat IP yang melakukan scanning port dalam jumlah banyak (maksimal 20 scan port) di dalam selang waktu 10 menit. 
 (clue: test dengan nmap)
 #### Script
+##### Stark, Sein - Web Server
+```
+iptables -A INPUT -m recent --name portscan --update --seconds 600 --hitcount 20 -j DROP
+iptables -A FORWARD -m recent --name portscan --update --seconds 600 --hitcount 20 -j DROP
+```
+##### GrobeForest
+```
+date -s "13 FEB 2024 11:20:00"
+ping 10.51.14.138 -c 25
+```
 #### Testing
+![image](https://github.com/AdonisZK/Jarkom-Modul-5-E29-2023/assets/48209612/4433727b-d327-4aff-ad87-7393e0418156)
+Hanya 20 paket yang diterima
 ### 10. Karena kepala suku ingin tau paket apa saja yang di-drop, maka di setiap node server dan router ditambahkan logging paket yang di-drop dengan standard syslog level. 
 #### Script
 #### Testing
