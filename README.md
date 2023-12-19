@@ -529,7 +529,7 @@ ping 10.51.14.138 -c 25
 ```
 #### Testing
 ![image](https://github.com/AdonisZK/Jarkom-Modul-5-E29-2023/assets/48209612/4433727b-d327-4aff-ad87-7393e0418156)
-Hanya 20 paket yang diterima
+- Hanya 20 paket yang diterima, dan sisanya akan ditolak
 ### 10. Karena kepala suku ingin tau paket apa saja yang di-drop, maka di setiap node server dan router ditambahkan logging paket yang di-drop dengan standard syslog level. 
 #### Script
 #### Testing
