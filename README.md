@@ -7,6 +7,19 @@ Kelompok E29
 | Sekar Ambar Arum | 5025211041 |
 
 # Laporan Resmi
+* [(A)](#(A))
+  * [Topologi GNS3](#Topologi-GNS3)
+* [(B)](#(B))
+  * [Topologi VLSM](#Topologi-VLSM)
+  * [VLSM Tree](#VLSM-Tree)
+* [(C)](#(C))
+  * [Rute](#Rute)
+  * [Pembagian IP](#Pembagian-IP)
+  * [Subnetting](#Subnetting)
+  * [Routing](#Routing)
+* [(D)](#(D))
+  * [DHCP Relay](#DHCP-Relay)
+  * [Testing-CPT](#Testing-CPT)
 
 ### (A) Tugas pertama, buatlah peta wilayah sesuai berikut ini:
 #### Topologi GNS3
