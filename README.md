@@ -604,4 +604,11 @@ ping 10.51.14.138 -c 25
 - Hanya 20 paket yang diterima, dan sisanya akan ditolak
 ### 10. Karena kepala suku ingin tau paket apa saja yang di-drop, maka di setiap node server dan router ditambahkan logging paket yang di-drop dengan standard syslog level. 
 #### Script
+```
+iptables -N DROPLOG
+iptables -I DROPLOG -j LOG --log-level debug --log-prefix "Dropped Packet: "
+iptables -I INPUT -j DROPLOG
+iptables -I OUTPUT -j DROPLOG
+iptables -I FORWARD -j DROPLOG
+```
 #### Testing
